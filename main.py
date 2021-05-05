@@ -1,9 +1,12 @@
 import keyboard
+import os
 import pafy
 import time
 import vlc
 from youtube_search import YoutubeSearch
 from ProgressBar import ProgressBar
+
+clear = lambda: os.system('cls')
 
 def pause():
     programPause = input("Press any key to exit...")
@@ -50,19 +53,23 @@ while continueProgram == True:
         bar.ChangeEmptyChar('-')
         bar.ChangeFilledChar('=') 
         bar.show_percentage = False
-
-        print(f'🔊 { results[selection-1]["title"] }')
+        
+        clear()
+        print(' __________________________________________________________________')
+        print('|                                                                  |')
+        print(f'|🔊 { results[selection-1]["title"] }')
         while player.get_state() == vlc.State.Playing:
             if isVideoStream == False:
                 currentTime = round(player.get_time() / 1000, 0)
                 bar.Update(int(currentTime))
-                print(f" ▶({time.strftime('%H:%M:%S', time.gmtime(int(currentTime)))}){bar.display_string} ■[{durationString}]", end='\r')
+                print(f"| ▶({time.strftime('%H:%M:%S', time.gmtime(int(currentTime)))}){bar.display_string} ■[{durationString}]|", end='\r')
             else:
-                print(f" ▶(🔴LIVE)", end='\r')
+                print(f"| ▶(🔴LIVE)", end='\r')
             time.sleep(0.5)
-            if keyboard.is_pressed('space'):
-                    player.stop()
-        bar.Update(int(duration))
+            # if keyboard.is_pressed('space'):
+            #         player.stop()
+        bar.Update(int(duration)+10)
+        
     else:
         print("no results")
     
