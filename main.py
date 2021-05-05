@@ -2,6 +2,7 @@ import pafy
 import time
 import vlc
 from youtube_search import YoutubeSearch
+from ProgressBar import ProgressBar
 
 def pause():
     programPause = input("Press any key to exit...")
@@ -19,7 +20,6 @@ if len(results) > 0:
         selection = int(input("\nWhich would you like to play? "))
 
     print(f'Selected: { results[selection-1]["title"] }. \nSpinning up audio stream...')
-    # returns a dictionary
     videoId = results[selection-1]['id']; #the code of the video marked in x here "https://www.youtube.com/watch?v=xxxxxxxxxxx"
     video = pafy.new(videoId)
     best = video.getbestaudio(preftype="m4a")
@@ -36,9 +36,16 @@ if len(results) > 0:
     player.play()
     time.sleep(2)
     duration = round(player.get_length() / 1000, 0)
+    bar = ProgressBar(40, int(duration))
+    bar.ChangeLRChar('[', ']')
+    bar.ChangeEmptyChar('_')
+    bar.ChangeFilledChar('=')
+    bar.show_percentage = False
     while player.get_state() == vlc.State.Playing:
         currentTime = round(player.get_time() / 1000, 0)
-        print(f"▶️  ({currentTime}/{duration})", end = "\r")
+        bar.Update(int(currentTime))
+        print(f"▶️ {bar.display_string}({int(currentTime)}/{int(duration)})", end='\r')
+        # print(f"▶️  ({currentTime}/{duration})", end = "\r")
         time.sleep(1)
 else:
     print("no results")
