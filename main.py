@@ -23,10 +23,14 @@ while continueProgram == True:
         print("Here are the top 5 matches I found:")
         for x in range(0, len(results)):
             print(f'{ x+1 }.{ results[x]["title"] }')
+        print(f'{ len(results)+1 }. [BACK TO SEARCH]')
         selection = 0
-        while(selection not in [1,2,3,4,5]):
+        while(selection not in [1,2,3,4,5,6]):
             selection = int(input("\nWhich would you like to play? "))
 
+        if selection == 6:
+            clear()
+            continue
         print(f'Spinning up audio stream...')
         videoId = results[selection-1]['id']; #the code of the video marked in x here "https://www.youtube.com/watch?v=xxxxxxxxxxx"
         video = pafy.new(videoId)
@@ -66,8 +70,8 @@ while continueProgram == True:
             else:
                 print(f"| ▶(🔴LIVE)", end='\r')
             time.sleep(0.5)
-            # if keyboard.is_pressed('space'):
-            #         player.stop()
+            if keyboard.is_pressed('space'):
+                    player.stop()
         bar.Update(int(duration)+10)
         
     else:
